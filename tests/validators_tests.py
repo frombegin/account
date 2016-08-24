@@ -1,7 +1,9 @@
 from unittest import TestCase
-from validators import is_mobile, is_email
 
-class UtilsTestCase(TestCase):
+from util.validators import is_mobile, is_email
+
+
+class ValidatorTestCase(TestCase):
 
     def test_email_validator(self):
         self.assertTrue(is_email("hello.world@gmail.com"))
