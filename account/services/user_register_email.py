@@ -1,6 +1,6 @@
 from account import before_user_register, after_user_register
 from account.services import (
-    default_db_adapter,
+    default_user_manager,
     user_resend_activation_email)
 from app import app
 
@@ -30,7 +30,7 @@ def user_register_email(email, password, token):
     before_user_register.send(email=email, token=token)
 
     # 根据 token 获取邀请人, token 不存在时返回 None
-    invite_user = default_db_adapter.get_user_by_token(token)
+    invite_user = default_user_manager.get_user_by_token(token)
 
     # 处理非开放注册
     if not is_open_registration(app) and invite_user is None:
@@ -38,7 +38,7 @@ def user_register_email(email, password, token):
 
     try:
         # 添加用户到数据库
-        user = default_db_adapter.add_user_to_db(email, password, invite_user)
+        user = default_user_manager.add_user_to_db(email, password, invite_user)
         # 发送注册成功（激活）邮件
         user_resend_activation_email(email)
         # 发送“成功注册”事件

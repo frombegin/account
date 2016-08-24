@@ -1,7 +1,6 @@
 from account import before_user_register, before_user_login
-from account.services import default_db_adapter
-from account.services.db_adapter import default_db_adapter
 from account.services.user_register_email import is_open_registration, NotOpenRegistrationError, AlreadyExistsError
+from account.user_manager import default_user_manager
 from app import app
 
 
@@ -28,7 +27,7 @@ def user_register_mobile(app, mobile, password, token=None):
     before_user_register.send(mobile=mobile, token=token)
 
     # 根据 token 获取邀请人
-    invite_user = default_db_adapter.get_user_by_token(token)
+    invite_user = default_user_manager.get_user_by_token(token)
 
     # 处理非开放注册
     if not is_open_registration(app) and invite_user is None:
@@ -36,7 +35,7 @@ def user_register_mobile(app, mobile, password, token=None):
 
     try:
         # 添加用户到数据库
-        user = default_db_adapter.add_user_to_db(mobile, password, invite_user)
+        user = default_user_manager.add_user_to_db(mobile, password, invite_user)
     except AlreadyExistsError as e:
         # 处理已经注册的情况
         pass
