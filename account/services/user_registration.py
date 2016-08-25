@@ -36,20 +36,22 @@ class UserRegistration:
         self.inviter = self.load_inviter(token)
 
     def load_inviter(self, token):
-        return None
+        if token is None:
+            return None
+            # TODO: load uer by token
 
-    def allow_open_register(self):
+    def _allow_open_register(self):
         return True
 
-    def allow_inviter_register(self):
+    def _allow_inviter_register(self):
         return True
 
     def check_allow(self):
-        if self.allow_open_register():
+        if self._allow_open_register():
             raise NotAllowRegisterError()
 
-        if self.allow_inviter_register() and self.inviter is None:
-            raise RegistrationNotAllowedError('can''t register without invitor!')
+        if self._allow_inviter_register() and self.inviter is None:
+            raise RegistrationNotAllowedError('can''t register without inviter!')
 
     def create_user(self):
         pass
