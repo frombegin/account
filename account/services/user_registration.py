@@ -80,3 +80,12 @@ class UserRegistration:
         except AlreadyExistsError as e:
             # 处理已经注册的情况
             pass
+
+
+    def __call__(self, *args, **kwargs):
+        return self.execute()
+
+
+if __name__ == '__main__':
+    UserRegistration('tom@email.com', '123456', '1234').execute()
+    UserRegistration('tom@email.com', '123456', '1234')();

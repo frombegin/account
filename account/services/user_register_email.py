@@ -41,5 +41,3 @@ def user_register_email(email, password, token):
         pass
 
 
-if __name__ == '__main__':
-    UserRegistration('tom@email.com', '123456', '1234').execute()
