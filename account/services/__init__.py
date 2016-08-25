@@ -1,5 +1,6 @@
 from account import before_user_register, before_user_login
-from account.services.user_register_email import is_open_registration, NotOpenRegistrationError, AlreadyExistsError
+from account.services.user_register_email import is_open_registration, AlreadyExistsError
+from account.services.user_registration import RegistrationNotAllowedError, AlreadyExistsError
 from account.user_manager import default_user_manager
 from app import app
 
@@ -31,7 +32,7 @@ def user_register_mobile(app, mobile, password, token=None):
 
     # 处理非开放注册
     if not is_open_registration(app) and invite_user is None:
-        raise NotOpenRegistrationError('can''t register!')
+        raise RegistrationNotAllowedError('can''t register!')
 
     try:
         # 添加用户到数据库

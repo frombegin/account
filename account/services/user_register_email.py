@@ -1,20 +1,13 @@
-from account import before_user_register, after_user_register
 from account.services import (
     default_user_manager,
-    user_resend_activation_email)
+    user_resend_activation_email, RegistrationNotAllowedError)
+from account.services.user_registration import AlreadyExistsError, UserRegistration
+from account.signals import before_user_register, after_user_register
 from app import app
 
 
 def is_open_registration(app):
     return app.config.get('OPEN_REGISTRATION', True)
-
-
-class NotOpenRegistrationError(RuntimeError):
-    pass
-
-
-class AlreadyExistsError(RuntimeError):
-    pass
 
 
 def user_register_email(email, password, token):
@@ -34,7 +27,7 @@ def user_register_email(email, password, token):
 
     # 处理非开放注册
     if not is_open_registration(app) and invite_user is None:
-        raise NotOpenRegistrationError('can''t register!')
+        raise RegistrationNotAllowedError('can''t register!')
 
     try:
         # 添加用户到数据库
@@ -46,3 +39,7 @@ def user_register_email(email, password, token):
     except AlreadyExistsError as e:
         # 处理已经注册的情况
         pass
+
+
+if __name__ == '__main__':
+    UserRegistration('tom@email.com', '123456', '1234').execute()
