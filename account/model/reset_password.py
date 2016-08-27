@@ -35,7 +35,7 @@ class ResetPasswordManager:
                 reset_expired_time=datetime.now() + timedelta(seconds=self.get_expiration_duration())
             )
             db.session.add(rp)
-            db.session.commit(rp)
+            db.session.commit()
 
             # 发送 reset_hash 邮件
             self.send_reset_password_email(email, reset_hash)
@@ -76,4 +76,5 @@ if __name__ == '__main__':
     with app.app_context():
         rpm = ResetPasswordManager()
         print(rpm.get_expiration_duration())
+        rpm.request_reset_password('tom@gmail.com')
         rpm.handle_reset_password('tom@gmail.com', '12435', 'newpass')
